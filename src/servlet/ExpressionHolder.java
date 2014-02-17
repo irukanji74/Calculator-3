@@ -1,13 +1,12 @@
 package servlet;
 
-import java.util.logging.Logger;
-
 import utility.Calculations;
 import utility.DigitsPointOperators;
 
 public class ExpressionHolder {
 
-	Logger log = Logger.getLogger("Looger");
+	// private static final Logger LOGGER =
+	// Logger.getLogger(ExpressionHolder.getClass().getSimpleName());
 	private StringBuilder expression = new StringBuilder();
 	private StringBuilder firstNum = new StringBuilder();
 	private StringBuilder secondNum = new StringBuilder();
@@ -26,7 +25,7 @@ public class ExpressionHolder {
 				expression.delete(expression.length() - 1, expression.length());
 			}
 
-		} else if (firstNum.length() != 0) {
+		} else {
 			secondNum.append(symbol);
 			if (Calculations.isMatchDigit(secondNum.toString())) {
 				expression.append(symbol);
@@ -36,25 +35,28 @@ public class ExpressionHolder {
 		}
 
 		if (Calculations.isMatchOperator(symbol)) {
-			
-			if (Calculations.isMatchNumber(expression.toString()) && firstNum.length() == 0) {
+
+			if (Calculations.isMatchNumber(expression.toString())
+					&& firstNum.length() == 0) {
 				firstNum.append(expression);
 				operator = symbol;
 				expression.append(operator);
-				
+
 			} else if (Calculations.isMatchNumber(secondNum.toString())) {
-				
-				String result = Calculations.calculateResult(getFirstNum(), getSecondNum(), operator);
-				  if(result.equals(DigitsPointOperators.Zerodiv.symbol())){
-					  expression.delete(0, expression.length()).append(DigitsPointOperators.Zerodiv.symbol());
-					  firstNum.delete(0, firstNum.length());
-					  secondNum.delete(0, secondNum.length());
-					 return;
-				  }
-				  if(symbol.equals(DigitsPointOperators.Equal.symbol())){
-						expression.append(DigitsPointOperators.Equal.symbol()).append(result);
-						return;
-				  }
+
+				String result = Calculations.calculateResult(getFirstNum(), getSecondNum());
+				if (result.equals(DigitsPointOperators.Zerodiv.symbol())) {
+					expression.delete(0, expression.length()).append(
+							DigitsPointOperators.Zerodiv.symbol());
+					firstNum.delete(0, firstNum.length());
+					secondNum.delete(0, secondNum.length());
+					return;
+				}
+				if (symbol.equals(DigitsPointOperators.Equal.symbol())) {
+					expression.append(DigitsPointOperators.Equal.symbol())
+							.append(result);
+					return;
+				}
 				operator = symbol;
 				firstNum.delete(0, firstNum.length());
 				firstNum.append(result);
@@ -64,28 +66,23 @@ public class ExpressionHolder {
 			}
 		}
 
-		if(symbol.equals(DigitsPointOperators.Clear.symbol())){
+		if (symbol.equals(DigitsPointOperators.Clear.symbol())) {
 			getFirstNum().delete(0, firstNum.length());
 			getSecondNum().delete(0, secondNum.length());
 			getExpression().delete(0, expression.length());
 			operator = null;
 		}
-		
+
 	}
 
 	public StringBuilder getFirstNum() {
 		return firstNum;
 	}
 
-	public void setFirstNum(String symbol) {
-	}
 
 	public StringBuilder getSecondNum() {
 		return secondNum;
 	}
 
-	public void setSecondNum(StringBuilder secondNum) {
-		this.secondNum = secondNum;
-	}
 
 }
